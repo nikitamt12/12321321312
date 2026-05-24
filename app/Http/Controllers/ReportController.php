@@ -4,14 +4,40 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Report;
+use App\Models\Status;
 
 class ReportController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $reports = Report::all();
+        $query = Report::query();
 
-        return view('report.index', compact('reports'));
+        if ($request->sort == 'asc') {
+
+            $query->orderBy('created_at', 'asc');
+
+        }
+
+        if ($request->sort == 'desc') {
+
+            $query->orderBy('created_at', 'desc');
+
+        }
+
+        if ($request->status) {
+
+            $query->where('status_id', $request->status);
+
+        }
+
+        $reports = $query->paginate(5);
+
+        $statuses = Status::all();
+
+        return view('report.index', compact(
+            'reports',
+            'statuses'
+        ));
     }
 
     public function create()
