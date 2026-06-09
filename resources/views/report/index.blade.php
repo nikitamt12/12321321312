@@ -1,3 +1,4 @@
+@include('layouts.flash-messages')
 <h1>Заявления</h1>
 
 <a href="{{ route('reports.create') }}">
@@ -37,14 +38,22 @@
         <h3>{{ $report->number }}</h3>
 
         <p>{{ $report->description }}</p>
+        @if($report->path_img)
 
-        <p>{{ $report->created_at }}</p>
+    <img
+        src="{{ asset('storage/'.$report->path_img) }}"
+        width="200"
+    >
+
+@endif
+
+        <p>{{ \Carbon\Carbon::parse($report->created_at)->translatedFormat('d.m.Y H:i') }}</p>
 
         <p>
 
             Статус:
 
-            {{ $report->status->name ?? 'Нет статуса' }}
+            <x-status :status="$report->status_id" />
 
         </p>
 

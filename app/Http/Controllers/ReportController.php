@@ -47,18 +47,33 @@ class ReportController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'number' => 'required',
-            'description' => 'required'
-        ]);
+    $request->validate([
+        'number' => 'required',
+        'description' => 'required',
+        'path_img' => 'nullable|image|mimes:jpg,jpeg,png|max:2048'
+    ]);
 
-        Report::create([
-            'number' => $request->number,
-            'description' => $request->description
-        ]);
+    $path = null;
 
-        return redirect()->route('reports.index');
+    if ($request->hasFile('path_img')) {
+
+        $path = $request->file('path_img')
+            ->store('reports', 'public');
+
     }
+
+    Report::create([
+        'number' => $request->number,
+        'description' => $request->description,
+        'status_id' => 1,
+        'user_id' => auth()->id(),
+        'path_img' => $path
+    ]);
+
+    return redirect()
+        ->route('reports.index')
+        ->with('success', 'Заявление успешно создано');
+}
 
     public function destroy(Report $report)
     {
@@ -84,6 +99,7 @@ class ReportController extends Controller
             'description' => $request->description
         ]);
 
-        return redirect()->route('reports.index');
+        
+        return redirect()->route('reports.index')->with('success', 'Успешно!');
     }
 }

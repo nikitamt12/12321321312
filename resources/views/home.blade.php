@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ru">
+<x-app-layout>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -80,4 +81,5 @@
 </footer>
 
 </body>
+</x-app-layout>
 </html>
